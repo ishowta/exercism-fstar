@@ -41,5 +41,8 @@ build: $(ALL_ML_FILES)
 test: $(ALL_ML_FILES)
 	cd $(EXERCISE); dune runtest
 
+submit:
+	exercism submit $(EXERCISE)/$(EXERCISE_MODULE_NAME).ml
+
 clean:
 	rm -rf $(EXERCISE)/_build $(ML_FILES) $(EXERCISE)/*~ $(EXERCISE)/*.checked $(EXERCISE)/.depend
