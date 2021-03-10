@@ -16,9 +16,6 @@ ML_FILES=$(addprefix $(EXERCISE)/,$(addsuffix .ml,$(subst .,_, $(subst .fst,,$(F
 
 FSTAR=fstar.exe --cache_checked_modules --odir $(EXERCISE) --use_hints $(OTHERFLAGS) --z3rlimit_factor 2
 
-$(EXERCISE):
-	exercism download --exercise=$(EXERCISE) --track=ocaml
-
 $(EXERCISE)/.depend:
 	$(FSTAR) --dep full $(FSTAR_FILES) --extract '* -FStar -Prims' > $(EXERCISE)/.depend
 
@@ -30,8 +27,9 @@ $(EXERCISE)/%.ml:
 
 -include $(EXERCISE)/.depend
 
-init: $(EXERCISE)
-	echo "module $(EXERCISE_MODULE_NAME)" > $(EXERCISE)/$(EXERCISE_FN).fst
+init:
+	exercism download --exercise=$(EXERCISE) --track=ocaml
+	test -f $(EXERCISE)/$(EXERCISE_FN).fst || echo "module $(EXERCISE_MODULE_NAME)" > $(EXERCISE)/$(EXERCISE_FN).fst
 	sed -r -i "" "s/\(libraries (.*)\)\)/\(libraries \1 $(FSTAR_LIBS)\)\)/" $(EXERCISE)/dune
 	mv $(EXERCISE)/$(EXERCISE_FN).ml $(EXERCISE)/sample_$(EXERCISE_FN).ml
 	mv $(EXERCISE)/$(EXERCISE_FN).mli $(EXERCISE)/sample_$(EXERCISE_FN).mli
