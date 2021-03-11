@@ -16,11 +16,11 @@ ML_FILES=$(addprefix $(EXERCISE)/,$(addsuffix .ml,$(subst .,_, $(subst .fst,,$(F
 
 FSTAR=fstar.exe --cache_checked_modules --odir $(EXERCISE) --use_hints $(OTHERFLAGS) --z3rlimit_factor 2 --detail_errors
 
-$(EXERCISE)/.depend:
+$(EXERCISE)/.depend: $(FSTAR_FILES)
 	$(FSTAR) --dep full $(FSTAR_FILES) --extract '* -FStar -Prims -Bridge' > $(EXERCISE)/.depend
 
-$(EXERCISE)/%.checked: $(EXERCISE)/%
-	$(FSTAR) --expose_interfaces $(ALL_FST_FILES)
+%.checked: %
+	$(FSTAR) $*
 	touch $@
 
 $(EXERCISE)/%.ml:
@@ -32,9 +32,10 @@ init:
 	exercism download --exercise=$(EXERCISE) --track=ocaml
 	test -f $(EXERCISE)/$(EXERCISE_FN).fst || echo "module $(EXERCISE_MODULE_NAME)" > $(EXERCISE)/$(EXERCISE_FN).fst
 	sed -r -i "" "s/\(libraries (.*)\)\)/\(libraries \1 $(FSTAR_LIBS)\)\)/" $(EXERCISE)/dune
+	sed -r -i "" "s/\(-warn-error\)/\(-w\)/" $(EXERCISE)/dune
 	mv $(EXERCISE)/$(EXERCISE_FN).ml $(EXERCISE)/sample_$(EXERCISE_FN).ml
 	mv $(EXERCISE)/$(EXERCISE_FN).mli $(EXERCISE)/sample_$(EXERCISE_FN).mli
-	cp *.ml $(EXERCISE)
+	ln *.ml $(EXERCISE)
 
 check: $(EXERCISE)/.depend $(addsuffix .checked, $(ALL_FST_FILES))
 
