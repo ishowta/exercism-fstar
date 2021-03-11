@@ -1,6 +1,12 @@
 module Lemmas
+module B = Bridge
 module I = FStar.Int
 module L = FStar.List.Pure
+
+val max_list_length_less_then_max_native_int: (l: list 'a) -> Lemma
+    (requires True)
+    (ensures L.length l <= I.max_int B.native_int_bits)
+    [SMTPat (L.length l)]
 
 val map2_keep_length:
                 f: ('a1 -> 'a2 -> Tot 'b)
