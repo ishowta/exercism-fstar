@@ -14,8 +14,8 @@ val hamming_distance : (l1: list nucleotide) -> (l2: list nucleotide) -> Tot (re
                         \/ msg = "right strand must not be empty"
                         \/ msg = "left and right strands must be of equal length"
     })
-let hamming_distance l1 l2 = match (l1, l2) with
-    | (l1, l2) when L.length l1 <> L.length l2 && L.length l1 = 0  -> Error "left strand must not be empty"
-    | (l1, l2) when L.length l1 <> L.length l2 && L.length l2 = 0 -> Error "right strand must not be empty"
-    | (l1, l2) when L.length l1 <> L.length l2 -> Error "left and right strands must be of equal length"
-    | _ -> Ok (to_native_int #native_int_bits (L.length (L.filter (fun (e1, e2) -> e1 <> e2) (L.zip l1 l2))))
+let hamming_distance l1 l2 = match l1, l2 with
+    | l1, l2 when L.length l1 <> L.length l2 && L.length l1 = 0  -> Error "left strand must not be empty"
+    | l1, l2 when L.length l1 <> L.length l2 && L.length l2 = 0 -> Error "right strand must not be empty"
+    | l1, l2 when L.length l1 <> L.length l2 -> Error "left and right strands must be of equal length"
+    | l1, l2 -> Ok (to_native_int #native_int_bits (L.length (L.filter (fun (e1, e2) -> e1 <> e2) (L.zip l1 l2))))
