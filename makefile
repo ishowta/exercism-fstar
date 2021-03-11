@@ -4,9 +4,9 @@ ifndef EXERCISE
    $(error "Please define the `EXERCISE` variable (ex. `EXERCISE=hello-world`).")
 endif
 
-EXERCISE_FN=$(subst -,_,$(EXERCISE))
+EXERCISE_FILENAME=$(subst -,_,$(EXERCISE))
 
-EXERCISE_MODULE_NAME=$(shell echo $(EXERCISE_FN) | perl -pe 's/^([a-z])(.*)$$/\U$$1\L$$2/g')
+EXERCISE_MODULE_NAME=$(shell echo $(EXERCISE_FILENAME) | perl -pe 's/^([a-z])(.*)$$/\U$$1\L$$2/g')
 
 FSTAR_FILES=$(wildcard *.fst) $(wildcard $(EXERCISE)/*.fst)
 
@@ -24,17 +24,17 @@ $(EXERCISE)/.depend: $(FSTAR_FILES)
 	touch $@
 
 $(EXERCISE)/%.ml:
-	$(FSTAR) $(subst .checked,,$<) --codegen OCaml --extract_module $(subst $(EXERCISE)/,,$(subst .fst.checked,,$<))
+	$(FSTAR) $(subst .checked,,$<) --codegen OCaml
 
 -include $(EXERCISE)/.depend
 
 init:
 	exercism download --exercise=$(EXERCISE) --track=ocaml
-	test -f $(EXERCISE)/$(EXERCISE_FN).fst || echo "module $(EXERCISE_MODULE_NAME)" > $(EXERCISE)/$(EXERCISE_FN).fst
+	test -f $(EXERCISE)/$(EXERCISE_FILENAME).fst || echo "module $(EXERCISE_MODULE_NAME)" > $(EXERCISE)/$(EXERCISE_FILENAME).fst
 	sed -r -i "" "s/\(libraries (.*)\)\)/\(libraries \1 $(FSTAR_LIBS)\)\)/" $(EXERCISE)/dune
 	sed -r -i "" "s/\(-warn-error\)/\(-w\)/" $(EXERCISE)/dune
-	mv $(EXERCISE)/$(EXERCISE_FN).ml $(EXERCISE)/sample_$(EXERCISE_FN).ml
-	mv $(EXERCISE)/$(EXERCISE_FN).mli $(EXERCISE)/sample_$(EXERCISE_FN).mli
+	mv $(EXERCISE)/$(EXERCISE_FILENAME).ml $(EXERCISE)/sample_$(EXERCISE_FILENAME).ml
+	mv $(EXERCISE)/$(EXERCISE_FILENAME).mli $(EXERCISE)/sample_$(EXERCISE_FILENAME).mli
 	ln *.ml $(EXERCISE)
 
 check: $(EXERCISE)/.depend $(addsuffix .checked, $(ALL_FST_FILES))
