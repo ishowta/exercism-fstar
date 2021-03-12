@@ -1,6 +1,7 @@
 module Hamming
+
 open Bridge
-open Lemmas
+module LL = Lemmas.List
 module I = FStar.Int
 module L = FStar.List.Pure
 

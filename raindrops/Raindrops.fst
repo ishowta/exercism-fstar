@@ -1,5 +1,7 @@
 module Raindrops
+
 open Bridge
+module LS = Lemmas.String
 
 (*
     If the number contains 3 as a factor, output 'Pling'.
@@ -13,8 +15,6 @@ let raindrop n = match of_int n with
     | n -> (if n % 3 = 0 then "Pling" else "")
             ^ (if n % 5 = 0 then "Plang" else "")
             ^ (if n % 7 = 0 then "Plong" else "")
-
-module LS = Lemmas.String
 
 val raindrop_cause_some_sound: (n:native_int) -> Lemma (raindrop n <> "")
 let raindrop_cause_some_sound n =
