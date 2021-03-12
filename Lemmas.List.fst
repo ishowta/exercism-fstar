@@ -1,12 +1,12 @@
 module Lemmas.List
 
 module B = Bridge
-module I = FStar.Int
+module UI = FStar.UInt
 module L = FStar.List.Pure
 
-val max_list_length_less_then_max_native_int: (l: list 'a) -> Lemma
+val max_list_length_less_then_max_native_uint: (l: list 'a) -> Lemma
     (requires True)
-    (ensures L.length l <= I.max_int B.native_int_bits)
+    (ensures L.length l <= UI.max_int B.native_uint_bits)
     [SMTPat (L.length l)]
 
 val map2_keep_length:
