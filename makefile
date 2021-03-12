@@ -48,12 +48,14 @@ $(EXERCISE)/%.ml:
 
 init:
 	exercism download --exercise=$(EXERCISE) --track=ocaml
-	test -f $(EXERCISE)/$(EXERCISE_MODULE_NAME).fst || echo "module $(EXERCISE_MODULE_NAME)" > $(EXERCISE)/$(EXERCISE_MODULE_NAME).fst
 	sed -r -i "" "s/\(libraries (.*)\)\)/\(libraries \1 $(FSTAR_LIBS)\)\)/" $(EXERCISE)/dune
 	sed -r -i "" "s/-warn-error/-w/" $(EXERCISE)/dune
 	echo "\n\n(include_subdirs unqualified)" >> $(EXERCISE)/dune
-	mv $(EXERCISE)/$(EXERCISE_RAW_FILENAME).ml $(EXERCISE)/Sample_$(EXERCISE_MODULE_NAME).ml
-	mv $(EXERCISE)/$(EXERCISE_RAW_FILENAME).mli $(EXERCISE)/Sample_$(EXERCISE_MODULE_NAME).mli
+	test -f $(EXERCISE)/$(EXERCISE_MODULE_NAME).fst || echo "module $(EXERCISE_MODULE_NAME)\nopen Bridge\n" > $(EXERCISE)/$(EXERCISE_MODULE_NAME).fst
+	cat $(EXERCISE)/$(EXERCISE_RAW_FILENAME).mli | sed -r "s/ int / native_int /g" >> $(EXERCISE)/$(EXERCISE_MODULE_NAME).fst
+	mkdir -p $(EXERCISE)/samples
+	mv $(EXERCISE)/$(EXERCISE_RAW_FILENAME).ml $(EXERCISE)/samples/Sample_$(EXERCISE_MODULE_NAME).ml
+	mv $(EXERCISE)/$(EXERCISE_RAW_FILENAME).mli $(EXERCISE)/samples/Sample_$(EXERCISE_MODULE_NAME).mli
 	mkdir -p $(EXERCISE_LIB_DIR)
 	ln -f *.ml $(EXERCISE_LIB_DIR)
 

@@ -1,5 +1,6 @@
 module Bridge
 
+module I = FStar.Int
 module L = FStar.List.Pure
 
 type result 'a 'b =
@@ -10,11 +11,11 @@ val native_int_bits: Prims.pos
 
 assume new type native_int
 
-val of_int: native_int -> Tot (FStar.Int.int_t native_int_bits)
+type isize = I.int_t native_int_bits
+
+val of_int: native_int -> Tot isize
 
 val to_native_int:
     #s:pos
-    -> (n:FStar.Int.int_t s{s <= native_int_bits})
+    -> (n:I.int_t s{s <= native_int_bits})
     -> Tot (native_n:native_int{of_int native_n = n})
-
-type isize = FStar.Int.int_t native_int_bits
