@@ -1,4 +1,4 @@
-# This makefile is based on https://github.com/FStarLang/FStar/blob/master/examples/sample_project/Makefile
+# This makefile is based on https://github.com/FStarLang/FStar/blob/master/examples/sample_project/Makefile and https://github.com/FStarLang/FStar/blob/master/ulib/ml/Makefile.include
 
 ifndef EXERCISE
    $(error "Please define the `EXERCISE` variable (ex. `EXERCISE=hello-world`).")
@@ -16,7 +16,23 @@ FSTAR_LIBS=ppx_deriving ppx_deriving_yojson.runtime fstarlib
 
 ML_FILES=$(addprefix $(EXERCISE_LIB_DIR)/,$(addsuffix .ml,$(subst .,_, $(subst .fst,,$(FSTAR_FILES)))))
 
-FSTAR=fstar.exe --cache_checked_modules --odir $(EXERCISE) --use_hints $(OTHERFLAGS) --z3rlimit_factor 2 --detail_errors
+FSTAR=fstar.exe --cache_checked_modules --odir $(EXERCISE_LIB_DIR) --use_hints $(OTHERFLAGS) --z3rlimit_factor 2 --detail_errors
+
+FSTAR_REALIZED_MODULES=All BaseTypes Buffer Bytes Char CommonST Constructive Dyn Float Ghost Heap Monotonic.Heap \
+	HyperStack.All HyperStack.ST HyperStack.IO Int16 Int32 Int64 Int8 IO \
+	List.Tot.Base Mul Option Pervasives.Native Set ST Exn String \
+	UInt16 UInt32 UInt64 UInt8 \
+	Pointer.Derived1 Pointer.Derived2 \
+	Pointer.Derived3 \
+	BufferNG \
+	TaggedUnion \
+	Bytes Util \
+	Pervasives Order Range \
+	Vector.Base Vector.Properties Vector TSet
+	# prims is realized by default hence not included in this list
+
+NOEXTRACT_MODULES=$(addprefix -FStar., $(FSTAR_REALIZED_MODULES) Printf) \
+  -LowStar.Printf +FStar.List.Tot.Properties +FStar.Int.Cast.Full -Steel
 
 $(EXERCISE)/.depend: $(FSTAR_FILES)
 	test -d $(EXERCISE) && $(FSTAR) --dep full $(FSTAR_FILES) --extract '* -FStar -Prims -Bridge' > $(EXERCISE)/.depend
@@ -26,7 +42,7 @@ $(EXERCISE)/.depend: $(FSTAR_FILES)
 	touch $@
 
 $(EXERCISE)/%.ml:
-	$(FSTAR) $(subst .checked,,$<) --codegen OCaml --odir $(EXERCISE_LIB_DIR)
+	$(FSTAR) $(subst .checked,,$<) --codegen OCaml --odir $(EXERCISE_LIB_DIR) --extract '* $(NOEXTRACT_MODULES)'
 
 -include $(EXERCISE)/.depend
 
@@ -44,7 +60,6 @@ init:
 check: $(EXERCISE)/.depend $(addsuffix .checked, $(ALL_FST_FILES))
 
 test: $(ALL_ML_FILES)
-	test ! -f $(EXERCISE_LIB_DIR)/$(EXERCISE_MODULE_NAME).ml || mv $(EXERCISE_LIB_DIR)/$(EXERCISE_MODULE_NAME).ml $(EXERCISE)
 	cd $(EXERCISE); OCAMLRUNPARAM='b' dune runtest
 
 submit:
