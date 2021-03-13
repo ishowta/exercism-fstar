@@ -1,12 +1,13 @@
 module Hamming
 
 open Bridge
-module LL = Lemmas.List
+open Lemmas.List
 module UI = FStar.Int
 module L = FStar.List.Pure
 
 type nucleotide = | A | C | G | T
 
+(** Compute the hamming distance between the two lists. *)
 val hamming_distance : (l1: list nucleotide) -> (l2: list nucleotide) -> Tot (res: result native_uint string{
         match res with
             | Ok distance -> L.length l1 = L.length l2
