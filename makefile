@@ -16,7 +16,7 @@ FSTAR_LIBS=ppx_deriving ppx_deriving_yojson.runtime fstarlib
 
 ML_FILES=$(addprefix $(EXERCISE_LIB_DIR)/,$(addsuffix .ml,$(subst .,_, $(subst .fst,,$(FSTAR_FILES)))))
 
-FSTAR=fstar.exe --cache_checked_modules --odir $(EXERCISE_LIB_DIR) --use_hints $(OTHERFLAGS) --z3rlimit_factor 2 --detail_errors
+FSTAR=fstar.exe --cache_checked_modules --odir $(EXERCISE_LIB_DIR) --record_hints --use_hints $(OTHERFLAGS) --z3rlimit_factor 2 --detail_errors --include $(EXERCISE) # Add `--query_stats` for more details.
 
 FSTAR_REALIZED_MODULES=All BaseTypes Buffer Bytes Char CommonST Constructive Dyn Float Ghost Heap Monotonic.Heap \
 	HyperStack.All HyperStack.ST HyperStack.IO Int16 Int32 Int64 Int8 IO \
@@ -51,7 +51,7 @@ init:
 	sed -r -i "" "s/\(libraries (.*)\)\)/\(libraries \1 $(FSTAR_LIBS)\)\)/" $(EXERCISE)/dune
 	sed -r -i "" "s/-warn-error/-w/" $(EXERCISE)/dune
 	echo "\n\n(include_subdirs unqualified)" >> $(EXERCISE)/dune
-	test -f $(EXERCISE)/$(EXERCISE_MODULE_NAME).fst || (echo "module $(EXERCISE_MODULE_NAME)\nopen Bridge\n" > $(EXERCISE)/$(EXERCISE_MODULE_NAME).fst && cat $(EXERCISE)/$(EXERCISE_RAW_FILENAME).mli | sed -r "s/ int / native_int /g" >> $(EXERCISE)/$(EXERCISE_MODULE_NAME).fst)
+	test -f $(EXERCISE)/$(EXERCISE_MODULE_NAME).fst || (echo "module $(EXERCISE_MODULE_NAME)\nopen Bridge\n" > $(EXERCISE)/$(EXERCISE_MODULE_NAME).fst && cat $(EXERCISE)/$(EXERCISE_RAW_FILENAME).mli | sed -r "s/ int / native_int /g" | sed -r "s/ int$$/ native_int/g" >> $(EXERCISE)/$(EXERCISE_MODULE_NAME).fst)
 	mkdir -p $(EXERCISE)/samples
 	mv $(EXERCISE)/$(EXERCISE_RAW_FILENAME).ml $(EXERCISE)/samples/Sample_$(EXERCISE_MODULE_NAME).ml
 	mv $(EXERCISE)/$(EXERCISE_RAW_FILENAME).mli $(EXERCISE)/samples/Sample_$(EXERCISE_MODULE_NAME).mli
