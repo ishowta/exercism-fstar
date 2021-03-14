@@ -12,7 +12,7 @@ val square_of_sum : native_int -> Ex native_int
 let square_of_sum n =
     let n = of_int n in
     if 1 <= n && Tot.square_of_sum n <= I.max_int native_int_bits then
-        to_native_int #native_int_bits (Tot.square_of_sum n)
+        to_native_int (Tot.square_of_sum n)
     else
         raise TooBigInteger
 
@@ -21,7 +21,7 @@ val sum_of_squares : native_int -> Ex native_int
 let sum_of_squares n =
     let n = of_int n in
     if 1 <= n && Tot.sum_of_squares n <= I.max_int native_int_bits then
-        to_native_int #native_int_bits (Tot.sum_of_squares n)
+        to_native_int (Tot.sum_of_squares n)
     else
         raise TooBigInteger
 
@@ -30,6 +30,6 @@ val difference_of_squares : native_int -> Ex native_int
 let difference_of_squares n =
     let n = of_int n in
     if 1 <= n && Tot.difference_of_squares n <= I.max_int native_int_bits then
-        to_native_int #native_int_bits (Tot.difference_of_squares n)
+        to_native_int (Tot.difference_of_squares n)
     else
         raise TooBigInteger

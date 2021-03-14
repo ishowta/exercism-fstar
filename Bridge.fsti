@@ -18,8 +18,7 @@ type isize = I.int_t native_int_bits
 val of_int: native_int -> Tot isize
 
 val to_native_int:
-    #s:pos
-    -> (n:I.int_t s{s <= native_int_bits})
+    (n:I.int_t native_int_bits)
     -> Tot (native_n:native_int{of_int native_n = n})
 
 type native_list 'a = (l:list 'a{L.length l <= I.max_int native_int_bits})
