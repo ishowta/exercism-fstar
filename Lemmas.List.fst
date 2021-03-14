@@ -4,11 +4,6 @@ module B = Bridge
 module UI = FStar.UInt
 module L = FStar.List.Pure
 
-assume val max_list_length_less_then_max_native_uint: (l: list 'a) -> Lemma
-    (requires True)
-    (ensures L.length l <= UI.max_int B.native_uint_bits)
-    [SMTPat (L.length l)]
-
 val map2_keep_length:
                 f: ('a1 -> 'a2 -> Tot 'b)
              -> l1: (list 'a1)
