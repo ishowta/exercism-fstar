@@ -10,14 +10,26 @@ exception TooBigInteger
 (* Square the sum of the numbers up to the given number *)
 val square_of_sum : native_int -> Ex native_int
 let square_of_sum n =
-    let nf = of_int n in
-    if nf < 1 || ((nf * (nf + 1)) / 2) > (I.max_int native_int_bits) then
-        raise TooBigInteger
+    let n = of_int n in
+    if 1 <= n && Tot.square_of_sum n <= I.max_int native_int_bits then
+        to_native_int #native_int_bits (Tot.square_of_sum n)
     else
-        Tot.square_of_sum n
+        raise TooBigInteger
 
 (* Sum the squares of the numbers up to the given number *)
 val sum_of_squares : native_int -> Ex native_int
+let sum_of_squares n =
+    let n = of_int n in
+    if 1 <= n && Tot.sum_of_squares n <= I.max_int native_int_bits then
+        to_native_int #native_int_bits (Tot.sum_of_squares n)
+    else
+        raise TooBigInteger
 
 (* Subtract sum of squares from square of sums *)
 val difference_of_squares : native_int -> Ex native_int
+let difference_of_squares n =
+    let n = of_int n in
+    if 1 <= n && Tot.difference_of_squares n <= I.max_int native_int_bits then
+        to_native_int #native_int_bits (Tot.difference_of_squares n)
+    else
+        raise TooBigInteger

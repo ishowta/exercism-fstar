@@ -16,7 +16,7 @@ FSTAR_LIBS=ppx_deriving ppx_deriving_yojson.runtime fstarlib
 
 ML_FILES=$(addprefix $(EXERCISE_LIB_DIR)/,$(addsuffix .ml,$(subst .,_, $(subst .fst,,$(FSTAR_FILES)))))
 
-FSTAR=fstar.exe --cache_checked_modules --odir $(EXERCISE_LIB_DIR) --record_hints --use_hints $(OTHERFLAGS) --z3rlimit_factor 2 --detail_errors --include $(EXERCISE) # Add `--query_stats` for more details.
+FSTAR=fstar.exe --cache_checked_modules --odir $(EXERCISE_LIB_DIR) --record_hints --use_hints $(OTHERFLAGS) --z3rlimit_factor 2 --detail_errors --include $(EXERCISE) --z3rlimit 10 # Add `--query_stats` for more details.
 
 FSTAR_REALIZED_MODULES=All BaseTypes Buffer Bytes Char CommonST Constructive Dyn Float Ghost Heap Monotonic.Heap \
 	HyperStack.All HyperStack.ST HyperStack.IO Int16 Int32 Int64 Int8 IO \
