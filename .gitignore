@@ -3,5 +3,7 @@
 !*/
 
 !*.fst
+!/*/*.ml
+/*/test.ml
 *.checked
 *.hints
