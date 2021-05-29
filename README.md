@@ -1,4 +1,4 @@
-# exercism-fstar
+# (WIP) exercism-fstar
 Scripts and sample solutions for practicing exercism's ocaml tracks with F*
 
 ## Usage
